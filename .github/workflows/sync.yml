@@ -1,0 +1,38 @@
+name: Sync Garmin Data
+
+on:
+  schedule:
+    # 每天 UTC 04:00 = 台灣時間 12:00
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+    # 允許手動觸發
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync script
+        env:
+          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          # API 模式（不需設 GOOGLE_CREDENTIALS）
+          API_URL: ${{ vars.API_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+          # 直連模式（如果沒設 API_URL/API_KEY，需要設這個）
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          SYNC_DAYS: 7
+          TIMEZONE: Asia/Taipei
+        run: python -m src.sync_garmin
