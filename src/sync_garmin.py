@@ -18,7 +18,12 @@ from .config import (
     safe_get,
 )
 from .garmin_client import GarminClient, AuthenticationError
-from .sheets_client import SheetsClient, SheetsError
+from .api_sheets_client import SheetsError
+
+try:
+    from .sheets_client import SheetsClient
+except ImportError:
+    SheetsClient = None  # template repo 不需要直連模式
 
 
 def log(message: str) -> None:

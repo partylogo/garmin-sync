@@ -5,7 +5,11 @@ insert_*_row() 會先 buffer 在本地，呼叫 flush() 時一次送出。
 """
 
 import requests
-from .sheets_client import SheetsError
+
+
+class SheetsError(Exception):
+    """Google Sheets 操作錯誤"""
+    pass
 
 
 class ApiSheetsClient:
