@@ -65,25 +65,6 @@ schedule:
   - cron: '0 4 * * *'  # UTC 時間，台灣時間要 +8
 ```
 
-## 手動補歷史資料
-
-如果想一次補齊超過 90 天的資料，在本機執行：
-
-```bash
-# 安裝依賴
-pip install -r requirements.txt
-
-# 設定環境變數
-export GARMIN_EMAIL="your_email"
-export GARMIN_PASSWORD="your_password"
-export GOOGLE_SHEET_ID="your_sheet_id"
-export API_URL="https://garmin-sheets-api.vercel.app"
-export API_KEY="your_api_key"
-
-# 補睡眠 + 活動資料（最近 90 天）
-python -m src.backfill --type all --days 90
-```
-
 ## 常見問題
 
 ### Q: GitHub Actions 執行失敗？
