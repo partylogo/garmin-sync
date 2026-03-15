@@ -497,6 +497,22 @@ def main() -> int:
             sheets = SheetsClient(config.google_credentials, config.google_sheet_id)
         log("Google Sheets 連接成功")
 
+        # API 模式：先確保分頁存在
+        if hasattr(sheets, '_post'):
+            log("正在初始化 Sheet 分頁...")
+            try:
+                init_result = sheets._post("/api/init", {
+                    "sheet_id": config.google_sheet_id,
+                    "sheets": ["sleep", "activity", "laps"],
+                })
+                created = init_result.get("created", [])
+                if created:
+                    log(f"  已建立分頁: {', '.join(created)}")
+                else:
+                    log("  所有分頁已存在")
+            except Exception as e:
+                log(f"  初始化分頁失敗: {e}（繼續嘗試同步）")
+
         # 同步睡眠資料
         sleep_count = sync_sleep_data(
             garmin, sheets, config.sync_days, config.timezone
