@@ -41,7 +41,7 @@
 4. 填入 Garmin 帳密和 Google Sheet ID
 5. 點擊「設定 Secrets」— 完成！
 
-> 你的 Garmin 密碼會在瀏覽器端加密後才送出，不會經過我們的 server。
+> 你的 Garmin 密碼會在瀏覽器端加密後就送出，且不會經過我們的 server。
 
 ### 4. 啟用 GitHub Actions
 
