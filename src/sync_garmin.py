@@ -357,6 +357,7 @@ def sync_laps_data(
         # 反轉圈數順序，讓最新的圈在最上面
         laps_reversed = list(reversed(laps))
 
+        activity_lap_count = 0
         for lap in laps_reversed:
             lap_index = safe_get(lap, "lapIndex", default="")
             lap_id = f"{date}|{activity_name}|{lap_index}"
@@ -367,11 +368,14 @@ def sync_laps_data(
             lap_row = extract_lap_data(activity, lap)
             sheets.insert_lap_row(lap_row)
             count += 1
+            activity_lap_count += 1
             if not hasattr(sheets, 'flush'):
                 time.sleep(1.5)  # 直連模式才需要等，API 模式是 buffer
 
-        if laps:
-            log(f"  新增 {activity_name} 的 {len(laps)} 圈資料")
+        if activity_lap_count > 0:
+            log(f"  新增 {activity_name} 的 {activity_lap_count} 圈資料")
+        elif laps:
+            log(f"  跳過 {activity_name}（{len(laps)} 圈已存在）")
 
     log(f"分圈資料同步完成，新增 {count} 筆")
     return count
