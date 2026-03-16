@@ -367,7 +367,8 @@ def sync_laps_data(
             lap_row = extract_lap_data(activity, lap)
             sheets.insert_lap_row(lap_row)
             count += 1
-            time.sleep(1.5)  # 避免超過 API 配額
+            if not hasattr(sheets, 'flush'):
+                time.sleep(1.5)  # 直連模式才需要等，API 模式是 buffer
 
         if laps:
             log(f"  新增 {activity_name} 的 {len(laps)} 圈資料")
@@ -411,7 +412,8 @@ def sync_sleep_data(
             sheets.insert_sleep_row(sleep_row)
             log(f"  新增 {date} 睡眠資料")
             count += 1
-            time.sleep(1.5)  # 避免超過 API 配額
+            if not hasattr(sheets, 'flush'):
+                time.sleep(1.5)  # 直連模式才需要等，API 模式是 buffer
         else:
             log(f"  跳過 {date}（無資料）")
 
@@ -460,7 +462,8 @@ def sync_activity_data(
         sheets.insert_activity_row(activity_row)
         log(f"  新增活動: {safe_get(activity, 'activityName', default='Unknown')}")
         count += 1
-        time.sleep(1.5)  # 避免超過 API 配額
+        if not hasattr(sheets, 'flush'):
+            time.sleep(1.5)  # 直連模式才需要等，API 模式是 buffer
 
     log(f"活動資料同步完成，新增 {count} 筆")
     return count
